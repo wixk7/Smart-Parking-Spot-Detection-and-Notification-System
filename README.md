@@ -52,6 +52,41 @@ The frontend is built with **React + Vite + Tailwind CSS**, while data is fetche
 
 ---
 
+## 🔄 Data Flow and Automation Overview
+
+The smart parking system operates through a **seamless integration** of hardware sensing, Python-based data handling, and UiPath robotic process automation (RPA).
+
+### ⚙️ 1️⃣ Arduino-Based Detection
+- The **Arduino Uno** continuously monitors two **HC-SR04 ultrasonic sensors** placed at the entry and exit gates.  
+- Its firmware (`parking_arduino/parking_arduino.ino`) detects vehicle movement and sends event messages — `"ENTRY"` or `"EXIT"` — through the serial port in real time.
+
+### 🧠 2️⃣ Python Serial Bridge
+- The **Python script** (`serialBridge.py`) acts as a middleware between the Arduino hardware and UiPath automation.  
+- It continuously listens to the serial port for events, processes the data, and updates:
+  - Current occupancy count  
+  - Total slots and availability  
+  - Real-time data sync with the Supabase backend  
+- This ensures that every detected vehicle entry or exit is instantly reflected on the live dashboard.
+
+### 🤖 3️⃣ UiPath Mail Automation
+- The **UiPath workflow** (`carParking.xaml`) automates the process of:
+  - Reading parking data transmitted from the Python bridge  
+  - Calculating available and occupied slots  
+  - Generating and sending **automated email notifications** to registered users (e.g., faculty and students)  
+- UiPath sends these updates at specific intervals, ensuring proactive communication without manual intervention.
+
+### 🔁 End-to-End Flow Summary
+1. Vehicle passes entry/exit sensor ➜  
+2. Arduino detects and sends event ➜  
+3. `serialBridge.py` receives event and updates Supabase ➜  
+4. Website reflects the updated count instantly ➜  
+5. `carParking.xaml` in UiPath reads the updated data ➜  
+6. UiPath sends automated email alerts to users.
+
+This **IoT–Python–RPA pipeline** ensures low latency, real-time updates, and complete automation — from detection to user notification.
+
+---
+
 ## 🔧 Setup Instructions
 
 ### 1️⃣ Prerequisites
@@ -116,4 +151,9 @@ The dashboard shows:
 📧 anishaamar.deshmukh2022@vitstudent.ac.in
 
 ---
+
+## 📸 Demo Screenshots
+
+### 🖥️ Website Dashboard
+![Website Dashboard](assets/website.png)
 
